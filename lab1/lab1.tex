@@ -1,0 +1,172 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{pgfplots}
+\usepackage{tabto}
+
+\title{Obliczeia naukowe - lista 1}
+\author{Jakub Sofiński}
+\date{Październik 2021}
+
+\begin{document}
+
+\maketitle
+
+\section*{Zadanie 1}
+Epsilony maszynowe\\
+\begin{tabular}{|l|l|l|l|} \hline
+x       & Macheps & eps() & Float.h  \\ \hline
+Float16 & 0.000977              & 0.000977              & 1E-5     \\ \hline
+Float32 & 1.1920929e-7          & 1.1920929e-7          & 1E-9     \\ \hline
+Float64 & 2.220446049250313e-16 & 2.220446049250313e-16 & 1E-9     \\ \hline
+\end{tabular} \\
+\\
+Eta\\
+\begin{tabular}{|l|l|l|} \hline
+x       & Eta       & nextfloat()   \\ \hline
+Float16 & 6.0e-8       & 6.0e-8     \\ \hline
+Float32 & 1.0e-45      & 1.0e-45    \\ \hline
+Float64 & 5.0e-324     & 5.0e-324   \\ \hline
+\end{tabular}\\
+\\
+Jaki związek ma liczba macheps z precyzją arytmetyki?\\
+Macheps to najmniejsza kolejna liczba po 1, więc w przypadku liczb należących do [1,2], największy błąd przybliżenia jaki możemy dostać to macheps/2. Wynika z tego, że macheps =  2 * precyzja arytmetyki. \\
+\\
+Jaki związek ma liczba eta z liczbą MINsub?\\
+Bitstring(eta) dla Float32 to 0.00000000.00000000000000000000001, więc znak to "+", wykładnik wynosi ${2^{-126}}$ czyli ok. 1.18 * ${10^{-38}}$ , a mantysa to ok. 1.19 * ${10^{-7}}$ co daje nam liczbę równą MINsub = ${1.4 * 10^{-45}}$ \\
+\\
+Floatmin() a MINnor?\\
+Bitstring(floatmin) dla Float32 to 0.00000001.00000000000000000000000, więc znak to "+", a wykładnik wynosi, tak jak przypadku ety ${2^{-126}}$, ale ten jest znormalizowany. Mantysa wynosi 1.0, więc otrzymujemy liczbę ok. 1.18 * ${10^{-38}}$, równą MINnor. \\
+\\
+Floatmin(Float32)    = 1.1754944f-38\\
+MINnor(single)       = 1.2 * ${10^{-38}}$\\
+Floatmin(Float64)    = 2.2250738585072014e-308\\
+MINnor(double)       = 2.2 * ${10^{-308}}$\\
+\\
+MAX\\
+\begin{tabular}{|l|l|l|l|} \hline
+x       & Macheps & Floatmax()      & Float.h  \\ \hline
+Float16 & 6.547e4               & 6.55e4                    & 1E+37     \\ \hline
+Float32 & 3.4028233e38          & 3.4028235e38              & 1E+37     \\ \hline
+Float64 & 1.7976931348623155e308 & 1.7976931348623157e308   & 1E+37     \\ \hline
+\end{tabular}
+
+
+\section*{Zadanie 2}
+Wyniki Kahana:\\
+\begin{tabular}{|l|l|l|} \hline
+x       & ${3(4/3 - 1) - 1}$                & eps() \\ \hline
+Float16 & ${-0.000977}$                     & ${0.000977}$   \\ \hline
+Float32 & ${1.1920929 * 10^{-7}}$           & ${1.1920929 * 10^{-7}}$   \\ \hline
+Float64 & ${-2.220446049250313 * 10^{-16}}$ & ${2.220446049250313 * 10^{-16}}$    \\ \hline
+\end{tabular}\\
+\textbf{Czy Kahan miał rację?\\}
+Tak.
+\section*{Zadanie 3}
+\textbf{Czy są równomiernie rozmieszczone [1,2]?\\}
+Float64(1.0)\\
+0.01111111111.0000000000000000000000000000000000000000000000000000\\
+nextfloat(Float64(1.0))\\
+0.01111111111.0000000000000000000000000000000000000000000000000001\\
+Float64(1.0) - nextfloat(Float64(1.0)) = -2.220446049250313e-16\\
+${2^{-52}}$ = 2.220446049250313e-16\\
+FLoat64(1.5) - nextfloat(Float64(1.5)) = -2.220446049250313e-16, czyli dokładnie tyle samo co w przypadku 1.0 i kolejnego floata, można więc wywnioskować, że w tym przedziale różnice między kolejnymi sąsiadującymi liczbami są takie same.\\
+\\
+\textbf{Jak są rozmieszczone w [1/2, 1]?\\}
+Float64(0.5)\\
+0.01111111110.0000000000000000000000000000000000000000000000000000\\
+nextfloat(Float64(0.5))\\
+0.01111111110.0000000000000000000000000000000000000000000000000001\\
+Float64(0.5) - nextfloat(Float64(0.5)) = -1.1102230246251565e-16\\
+${2^{-53}}$ = 1.1102230246251565e-16\\
+\\
+\textbf{Jak są rozmieszczone w [2, 4]?\\}
+Float64(2.0)\\
+0.10000000000.0000000000000000000000000000000000000000000000000000\\
+nextfloat(Float64(2.0))\\
+0.10000000000.0000000000000000000000000000000000000000000000000001\\
+Float64(2.0) - nextfloat(Float64(2.0)) = -4.440892098500626e-16\\
+${2^{-51}}$ = 4.440892098500626e-16\\
+
+\section*{Zadanie 4}
+Najmniejsza taka liczba: 1.000000057228997 \\
+Kolejne znalezione takie liczby:\\
+\begin{tabular}{|l|l|} \hline2
+Liczba znaleziona      &   Liczba * (1.0/liczba) \\ \hline
+\textbf{1.000000057228997}  & 0.9999999999999999  \\  \hline
+1.000000066222211           & 0.9999999999999999  \\ \hline
+1.0000000694943918          & 0.9999999999999999  \\ \hline
+1.0000000710740116          & 0.9999999999999999  \\ \hline
+1.0000000833000269          & 0.9999999999999999  \\ \hline
+1.0000000991235327          & 0.9999999999999999  \\ \hline
+1.000000105103379           & 0.9999999999999999  \\ \hline
+1.0000001071951936          & 0.9999999999999999  \\ \hline
+1.00000011025853            & 0.9999999999999999  \\ \hline
+...                         & ...                 \\ \hline 
+\end{tabular}\\
+
+\section*{Zadanie 5}
+\begin{tabular}{|l|l|l|} \hline
+Metoda                  & Wynik Float32     & Wynik Float64     \\ \hline
+Dodawanie w przód (a)   & ${-0.4999443}$    & ${1.0251881368296672 * 10^{-10}}$  \\ \hline
+Dodawanie w tył (b)     & ${-0.4543457}$    & ${-1.5643308870494366 * 10^{-10}}$ \\ \hline
+Dodawanie od max do min & ${-0.5}$          & ${0.0}$                 \\ \hline
+Dodawanie od min do max & ${-0.5}$          & ${0.0}$                \\ \hline
+Prawidołowy wynik       & ${-1.00657107000000 * 10^{-11}}$  & ${-1.00657107000000 * 10^{-11}}$ \\ \hline
+\end{tabular}
+
+\section*{Zadanie 6}
+
+\begin{tabular}{|l|l|l|l|} \hline
+x               & f(x)      & g(x)  \\ \hline
+${8^{-1}}$      & ${0.0077822185373186414}$      & ${0.0077822185373187065}$   \\ \hline
+${8^{-2}}$      & ${0.00012206286282867573}$      & ${0.00012206286282875901}$   \\ \hline
+${8^{-3}}$      & ${1.9073468138230965e-6}$      & ${1.907346813826566e-6}$  \\ \hline
+${8^{-4}}$      & ${2.9802321943606103e-8}$      & ${2.9802321943606116e-8}$  \\ \hline
+${8^{-5}}$      & ${4.656612873077393e-10}$      & ${4.6566128719931904e-10}$  \\ \hline
+${8^{-6}}$      & ${7.275957614183426e-12}$      & ${7.275957614156956e-12}$  \\ \hline
+${8^{-7}}$      & ${1.1368683772161603e-13}$      & ${1.1368683772160957e-13}$  \\ \hline
+${8^{-8}}$      & ${1.7763568394002505e-15}$      & ${1.7763568394002489e-15}$  \\ \hline
+${8^{-9}}$      & ${0.0}$      & ${2.7755575615628914e-17}$  \\ \hline
+${8^{-10}}$     & ${0.0}$      & ${4.336808689942018e-19}$   \\ \hline
+${8^{-50}}$     & ${0.0}$      & ${2.4545467326488633e-91}$   \\ \hline
+${8^{-178}}$     & ${0.0}$      & ${1.6e-322}$   \\ \hline
+${8^{-179}}$     & ${0.0}$      & ${0.0}$   \\ \hline
+\end{tabular} \\
+
+\textbf{Które daje wiarygodne wyniki, a które nie?}\\
+W funckji f(x) występuje odejmowanie liczb: ${\sqrt[2]{x^2 + 1}}$ oraz 1, które dla bardzo małego x, stają się bardzo bliskie siebie, co znacząco zwiększa błąd obliczeń.
+Uważam, że wiarygodny wynik daje funkcja g(x) = ${{x^2}/{(\sqrt[2]{x^2 + 1} + 1)}}$, która nawert dla  ${x=8^{-179}}$ zwraca niezerowy wynik.
+\section*{Zadanie 7}
+
+\pgfplotsset{width=18cm,height=10cm}
+\begin{tikzpicture}
+  \begin{axis}[ 
+    grid=both,
+    xlabel=$i$,
+    ylabel={różnica między przybliżeniem a dokładnym wynikiem}
+  ] 
+    \addplot
+            coordinates {(0,1.59588956721896147)(1,1.13288615673134663)(2,0.92221922338800244)(3,0.50181667470714997)(4,0.25396327131678320)(5,0.12683053186883586)(6,0.06326306514798646)(7,0.03157922118127204)(8,0.01577475415589946)(9,0.00788344094489563)(10,0.00394070870623653)(11,0.00197009794631831)(12,0.00098498443846040)(13,0.00049247603147134)(14,0.00024623396274326)(15,0.00012311596877079)(16,0.00006155773264171)(17,0.00003077879991265)(18,0.00001538938308054)(19,0.00000769469978246)(20,0.00000384736259423)(21,0.00000192378242680)(22,0.00000096240007547)(23,0.00000048112689294)(24,0.00000024142164168)(25,0.00000012389732684)(26,0.00000006327252533)(27,0.00000002550954437)(28,0.00000002525450538)(29,0.00000006983046941)(30,0.00000012192077381)(31,0.00000011816360368)(32,0.00000035470359777)(33,0.00000083060146339)(34,0.00000083013181706)(35,0.00000273724562683)(36,0.00000107756905043)(37,0.00001418116130630)(38,0.00000107765710905)(39,0.00005995748446452)(40,0.00012099263337628)(41,0.00000107768279278)(42,0.00024306294037257)(43,0.00073134418945536)(44,0.00024521831100333)(45,0.00366103168876736)(46,0.00756728168865273)(47,0.00756728168859544)(48,0.02319228168856680)(49,0.00805771831144764)(50,0.11694228168854526)(51,0.11694228168854159)(52,0.61694228168854048)(53,0.11694228168853815)(54,0.11694228168853815)};
+  \end{axis}
+\end{tikzpicture}
+\\
+
+\pgfplotsset{width=18cm, compat=1.8, height=10cm}
+\begin{tikzpicture}
+  \begin{axis}[ 
+    grid=both,
+    xlabel=$i$,
+    ylabel={różnica między przybliżeniem a dokładnym wynikiem}
+  ]
+    \addplot
+            coordinates {(20,0.00000384736259423)(21,0.00000192378242680)(22,0.00000096240007547)(23,0.00000048112689294)(24,0.00000024142164168)(25,0.00000012389732684)(26,0.00000006327252533)(27,0.00000002550954437)(28,0.00000002525450538)(29,0.00000006983046941)(30,0.00000012192077381)(31,0.00000011816360368)(32,0.00000035470359777)(33,0.00000083060146339)(34,0.00000083013181706)(35,0.00000273724562683)(36,0.00000107756905043)};
+  \end{axis}
+\end{tikzpicture}
+
+Funkcja przbliżonej pochodnej, w tym przypadku, jest najdokładnieszja dla i=-28, a jej błąd względem dokładnie wyliczonej pochodnej wynosi ${4.8 * 10^{-9}}$.\\
+Uważam, że zmniejszenie wartości h, co miałoby teoretycznie zwiększyć dokładność przybliżenia, tego nie robi ze względu na pojawiające się coraz większe błędy zaokrągleń. Wartość w dla i=28 jest kompromisem między stratami dokładności przez odległość między 1 a 1+h oraz przez błąd zaokrąglenia.
+
+\end{document}
