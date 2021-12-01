@@ -2,6 +2,9 @@
 module Bisection
 export mbisekcji
 
+delta = 0.5 * 0.00001
+epsilon = 0.5 * 0.00001
+
 function myF(a) 
     return (a^2 - 4)
 end
@@ -32,12 +35,10 @@ function mbisekcji(f, a::Float64, b::Float64, delta::Float64, epsilon::Float64)
     end
 
     while e > delta && abs(v) > epsilon
-        it += 1
+        it = it + 1
         e = e/2.0
         r = a + e
         v = f(r)
-        # println(left)
-        # println(right)
 
         if (sgn(left) != sgn(v))
             b = r
@@ -52,6 +53,11 @@ function mbisekcji(f, a::Float64, b::Float64, delta::Float64, epsilon::Float64)
     return r, v, it, err
 end
 
-# println(mbisekcji(myF, -6.0, 1.0, 0.000001, 0.000001))
+function test() 
+    println(mbisekcji(myF, 0.0, 2.0, 0.000001, 0.000001))
+    println(mbisekcji(myF, 0.0, 2.1, 0.000001, 0.000001))
+end
+
+# test()
 
 end

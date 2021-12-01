@@ -17,6 +17,8 @@ function myPf(x)
     return cos(x) - x/2.0
 end 
 
-println(mbisekcji(myF, 1.5, 2.0, 0.0000001, 0.0000001))
-println(mstycznych(myF, myPf, 1.5, 0.0000001, 0.0000001, 10))
-println(msiecznych(myF, 1.0, 2.0, 0.0000001, 0.0000001, 10))
+delta = 0.5 * 0.00001
+epsilon = 0.5 * 0.00001
+println(mbisekcji(myF, 1.5, 2.0, delta, epsilon))
+println(mstycznych(myF, myPf, 1.5, delta, epsilon, 10))
+println(msiecznych(myF, 1.0, 2.0, delta, epsilon, 10))
