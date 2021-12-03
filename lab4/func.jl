@@ -65,23 +65,38 @@ end
 
 
 function rysujNnfx(func,a::Float64,b::Float64,n::Int)
+    accuracy = 10
     x = zeros(n)
     f = zeros(n)
     for i in 1:n 
-        x[i] = a + (b-a) * i/n
+        x[i] = a + (i-1)*((b-a)/n)
         f[i] = func(x[i])
     end
-    println(x)
-    println(f)
-    fx = ilorazyRoznicowe(x, f)
+    fx = zeros(n) 
+    temp = ilorazyRoznicowe(x, f)
+    # for i in 1:n 
+    #    fx[i] = warNewton(x, temp, x[i])
+    # end
+
+    xfunc = zeros(n*accuracy)
+    yfunc = zeros(n*accuracy)
+
+    for i in 1:accuracy*n 
+        xfunc[i] = a + (i-1)*((b-a)/(accuracy*n))
+        yfunc[i] = func(xfunc[i])
+    end
+    plot(xfunc, yfunc, label="funkcja interpolowana")
+
+    for i in 1:accuracy*n 
+        yfunc[i] = warNewton(x, temp, xfunc[i])
+    end
+    plot!(xfunc, yfunc, label="wielomian  interpolocayjny", linecolor="red")
 
 
-    plotI = Plots.plot(x, f, label="funkcja interpolowana")
-    savefig(plotI, "output_f.png")
-
-
-    plotI = Plots.plot(x, fx, label="wielomian  interpolocayjny")
-    savefig(plotI, "output_fx.png")
+    # plotF = Plots.plot(x, f, label="f unkcja interpolowana")
+    # plotFx = Plots.plot(x, fx, label="wielomian  interpolocayjny", linecolor="red")
+    # plot!(plotFx)
+    savefig("output.png")
 
     return fx
 
@@ -94,12 +109,16 @@ f_test = [-25.0, 3.0, 1.0, -1.0, 27.0, 235.0]
 # -25 + 28 - 15 + 5 
 
 function myFunc(x::Float64)
-    return (MathConstants.e)^x
+    # return (MathConstants.e)^x
+    # return x^2 * sin(x)
+    # return abs(x)
+    return 1/(1+x^2)
 end
 
 function test()
 
-    return rysujNnfx(myFunc, 0.0, 1.0, 10)
+    # return rysujNnfx(myFunc, -1.0, 1.0, 5)
+    return rysujNnfx(myFunc, -5.0, 5.0, 5)
     # return ilorazyRoznicowe(x, f)
     # return warNewton(x, ilorazyRoznicowe(x, f), 2.0)
     # return naturalna(x, ilorazyRoznicowe(x, f))
